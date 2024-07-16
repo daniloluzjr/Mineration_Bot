@@ -30,44 +30,46 @@ def bot_thread(window_name, start_button, countdown_label):
                 if not bot_running:
                     break
                 mins, secs = divmod(remaining, 60)
-                countdown_label.config(text=f"Reiniciando em: {mins:02d}:{secs:02d}")
+                countdown_label.config(text=f"Restarting in: {mins:02d}:{secs:02d}")
                 time.sleep(1)
 
-    # Reativar o botão "Iniciar Bot" quando o bot parar
+    # Reativar o botão "Start Bot" quando o bot parar
     start_button.config(state=tk.NORMAL)
-    countdown_label.config(text="Bot parado")
+    countdown_label.config(text="Bot stopped")
 
 def start_bot(window_name, start_button, countdown_label):
     global bot_running
     if not bot_running:
         bot_running = True
         start_button.config(state=tk.DISABLED)
-        countdown_label.config(text="Bot em execução")
+        countdown_label.config(text="Bot running")
         threading.Thread(target=bot_thread, args=(window_name, start_button, countdown_label)).start()
 
 def stop_bot(start_button, countdown_label):
     global bot_running
     bot_running = False
-    # Reativar o botão "Iniciar Bot" imediatamente após parar o bot
+    # Reativar o botão "Start Bot" imediatamente após parar o bot
     start_button.config(state=tk.NORMAL)
-    countdown_label.config(text="Bot parado")
+    countdown_label.config(text="Bot stopped")
 
 # Configuração da interface gráfica
 def create_gui():
     root = tk.Tk()
     root.title("Ravendawn Bot")
 
-    tk.Label(root, text="Nome da janela do jogo:").pack(pady=5)
+    tk.Label(root, text="Game window name:").pack(pady=5)
     window_name_entry = tk.Entry(root)
     window_name_entry.pack(pady=5)
 
-    start_button = tk.Button(root, text="Iniciar Bot", command=lambda: start_bot(window_name_entry.get(), start_button, countdown_label))
+    button_width = 12  # Define uma largura fixa para os botões
+
+    start_button = tk.Button(root, text="Start Bot", width=button_width, command=lambda: start_bot(window_name_entry.get(), start_button, countdown_label))
     start_button.pack(pady=5)
 
-    stop_button = tk.Button(root, text="Parar Bot", command=lambda: stop_bot(start_button, countdown_label))
+    stop_button = tk.Button(root, text="Stop Bot", width=button_width, command=lambda: stop_bot(start_button, countdown_label))
     stop_button.pack(pady=5)
 
-    countdown_label = tk.Label(root, text="Bot parado")
+    countdown_label = tk.Label(root, text="Bot stopped")
     countdown_label.pack(pady=5)
 
     # Manter a janela sempre à frente
@@ -77,9 +79,3 @@ def create_gui():
 
 if __name__ == "__main__":
     create_gui()
-
-
-# Criado por Danilo Luz Jr @professor_luz
-# abra no VS e execute: python bot.py (no terminal)
-# preencha o nome da sua janela (exemplo: Ravendal - NickName)
-# click Iniciar para o bot iniciar a mineração
